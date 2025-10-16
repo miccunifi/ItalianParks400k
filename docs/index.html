@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ItalianParks400k</title>
+  <meta name="description" content="Open camera trap dataset: images, annotations, methods, and downloads." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b1220; --card:#121a2a; --muted:#8ea0c4; --text:#f0f4ff; --brand:#6ea8fe; --brand-2:#8fd3f4;
+      --accent:#00e0ac; --ring:rgba(110,168,254,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%, rgba(110,168,254,.15), transparent 60%),
+                    radial-gradient(1200px 700px at 110% -10%, rgba(0,224,172,.1), transparent 60%), var(--bg);
+         color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif; line-height:1.6}
+    a{color:var(--brand)}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .nav{position:sticky;top:0;z-index:10;backdrop-filter:saturate(140%) blur(10px);
+         background:linear-gradient(180deg, rgba(11,18,32,.9), rgba(11,18,32,.65)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-inner{display:flex;align-items:center;gap:16px;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent))}
+    .nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    .nav-links{display:flex;gap:18px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:12px;color:var(--text);text-decoration:none;font-weight:600;background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));}
+    .btn:hover{border-color:rgba(255,255,255,.2)}
+    .btn.primary{background:linear-gradient(180deg, rgba(110,168,254,.25), rgba(110,168,254,.1)); border-color:rgba(110,168,254,.35); box-shadow:0 0 0 4px var(--ring)}
+    .hero{padding:56px 0 18px}
+    .title{font-size:clamp(28px,4vw,48px);line-height:1.15;margin:0 0 8px}
+    .subtitle{color:var(--muted);max-width:800px;margin:0}
+    .grid{display:grid;gap:18px}
+    .grid.stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); margin-top:24px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); padding:18px; border-radius:16px}
+    .kpi{font-size:28px;font-weight:700}
+    section{scroll-margin-top:80px; padding:26px 0}
+    h2{font-size:clamp(22px,2.6vw,30px);margin:6px 0 12px}
+    .two-col{display:grid;gap:18px;grid-template-columns:1.1fr .9fr}
+    @media (max-width:900px){.two-col{grid-template-columns:1fr}}
+    ul{margin:0 0 0 18px}
+    .downloads .btn{width:100%;justify-content:center}
+    .downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+    .table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    .table th,.table td{padding:10px 12px;text-align:left}
+    .row{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)}
+    .row td:first-child{border-radius:10px 0 0 10px}
+    .row td:last-child{border-radius:0 10px 10px 0}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px}
+    .gallery img{width:100%;height:140px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.12);cursor:pointer}
+    .note{font-size:.95rem;color:var(--muted)}
+    .badge{display:inline-block;padding:4px 8px;border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:12px;color:var(--muted)}
+    .footer{padding:40px 0 60px;color:var(--muted)}
+    .code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.95rem}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 10px}
+    .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+    .callout{border-left:3px solid var(--accent);padding:10px 12px;background:rgba(0,224,172,.06);border-radius:8px}
+    .inline-kbd{border:1px solid rgba(255,255,255,.25);border-bottom-width:3px;border-radius:6px;padding:2px 6px;font-weight:700}
+    .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+    dialog{border:none;border-radius:16px;padding:0;max-width:min(92vw,900px);background:var(--card);color:var(--text)}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .modal-body{padding:12px}
+    .close{background:transparent;border:none;color:var(--muted);font-size:24px;cursor:pointer}
+    .map-placeholder{aspect-ratio:16/9;border-radius:12px;border:1px dashed rgba(255,255,255,.2);display:grid;place-items:center;color:var(--muted)}
+    .toc{display:flex;gap:8px;flex-wrap:wrap}
+  </style>
+  <!-- JSON-LD schema for Dataset (fill in placeholders) -->
+  <script type="application/ld+json" id="dataset-jsonld">
+  {
+    "@context":"https://schema.org",
+    "@type":"Dataset",
+    "name":"Camera Trap Dataset (PROJECT NAME)",
+    "description":"Wildlife camera trap dataset with images and annotations.",
+    "url":"https://YOUR-USERNAME.github.io/REPO/",
+    "license":"https://creativecommons.org/licenses/by/4.0/",
+    "isAccessibleForFree": true,
+    "creator": [{"@type":"Organization","name":"YOUR LAB/ORG"}],
+    "keywords":["camera trap","wildlife","ecology","conservation","computer vision"],
+    "temporalCoverage":"YYYY-YYYY",
+    "spatialCoverage":{"@type":"Place","name":"REGION/COUNTRY"},
+    "distribution": [{
+      "@type":"DataDownload",
+      "encodingFormat":"application/zip",
+      "contentUrl":"https://github.com/YOUR-USERNAME/REPO/releases"
+    }]
+  }
+  </script>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot" aria-hidden="true"></span> Camera Trap Dataset</div>
+      <div class="nav-links" role="navigation" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#dataset">Dataset</a>
+        <a href="#methods">Methods</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#license">License</a>
+        <a href="#cite">Cite</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="container hero">
+    <p class="pill"><span class="dot"></span><span>Open data • CC BY 4.0</span></p>
+    <h1 class="title">Italian Parks 400k</h1>
+    <p class="subtitle">High‑quality camera trap images with expert labels and machine‑readable annotations for ecology and computer vision research.</p>
+
+    <div class="grid stats">
+      <div class="card"><div class="kpi" id="kpi-images">400k</div><div class="note">Images</div></div>
+      <div class="card"><div class="kpi" id="kpi-sites">576</div><div class="note">Camera Sites</div></div>
+      <div class="card"><div class="kpi" id="kpi-species">61</div><div class="note">Species</div></div>
+      <div class="card"><div class="kpi" id="kpi-years">2021–2024</div><div class="note">Temporal Coverage</div></div>
+    </div>
+
+    <div class="toc" style="margin-top:18px">
+      <span class="badge">Images (JPG)</span>
+      <span class="badge">Bounding boxes</span>
+      <span class="badge">Events & sequences</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="about" class="two-col">
+      <div>
+        <h2>About</h2>
+        <p>This repository hosts a curated set of camera trap images collected in <em>Italy</em> between <em>2021-2024</em>. It includes per-box labels, timestamps, metric information, to support ecology, conservation, and computer vision tasks such as detection, classification.</p>
+        <div class="callout">
+          <strong>Quick start:</strong> Download the <span class="inline-kbd">annotations.csv</span>, clone this site, and point your training script to the images directory. See <a href="#dataset">Dataset</a> for structure.
+        </div>
+      </div>
+      <div>
+        <h2>Downloads</h2>
+        <div id="downloads" class="downloads">
+          <a class="btn primary" href="https://github.com/YOUR-USERNAME/REPO/releases" target="_blank" rel="noopener">⬇️ Full release (images + annotations)</a>
+          <a class="btn" href="https://github.com/YOUR-USERNAME/REPO/raw/main/annotations/annotations.json" target="_blank" rel="noopener">📄 annotations (CSV)</a>
+          
+          <!--<a class="btn" href="https://github.com/YOUR-USERNAME/REPO/raw/main/splits/splits.json" target="_blank" rel="noopener">🧪 Splits (train/val/test)</a>-->
+          <a class="btn" href="https://github.com/miccunifi/ItalianParks400k" target="_blank" rel="noopener">💻 GitHub repository</a>
+        </div>
+        <p class="note">Tip: Use <span class="inline-kbd">git lfs</span> for large files. See instructions below.</p>
+      </div>
+    </section>
+
+    <section id="dataset">
+      <h2>Dataset structure</h2>
+      <table class="table" role="table" aria-describedby="ds-desc">
+        <caption id="ds-desc" class="sr-only">Folders, files and descriptions</caption>
+        <thead>
+          <tr><th>Path</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr class="row"><td><span class="code">/images/{site}/{image}.jpg</span></td><td>Original images grouped by site.</td></tr>
+          <tr class="row"><td><span class="code">/annotations/annotations.csv</span></td><td>annotations for bounding boxes and categories and metric locations.</td></tr>
+        </tbody>
+      </table>
+      <details>
+        <summary class="btn" style="margin-top:8px">Example: minimal COCO annotation</summary>
+        <pre class="code" aria-label="Example COCO JSON">{
+  "images": [{"id": 1, "file_name": "images/site-01/seq-0001/IMG_0001.jpg", "width": 1920, "height": 1080, "sequence_id": 1}],
+  "annotations": [{"id": 10, "image_id": 1, "category_id": 3, "bbox": [x,y,w,h], "area": w*h, "iscrowd": 0}],
+  "categories": [{"id": 3, "name": "red_fox"}],
+  "sequences": [{"id": 1, "site": "site-01", "utc_start": "2021-05-01T22:10:00Z"}]
+}</pre>
+      </details>
+    </section>
+
+    <section id="methods" class="two-col">
+      <div>
+        <h2>Methods</h2>
+        <ul>
+          <li><strong>Sites:</strong> 576 camera stations across <em>Italy</em>.</li>
+          <li><strong>Annotation:</strong> Expert labels, QA, inter‑rater metrics.</li>
+          <!--<li><strong>Hardware:</strong> Make/model, IR flash, trigger settings.</li>
+          <li><strong>Deployment:</strong> Start–end dates, maintenance schedule.</li>
+          <li><strong>De‑duplication:</strong> Sequence/event definition.</li>-->
+          <li><strong>Ethics:</strong> Human privacy filtering, sensitive species policy.</li>
+        </ul>
+      </div>
+      <!--
+      <div>
+        <h2>Map</h2>
+        <div class="map-placeholder">Drop a static map or Leaflet here (optional)</div>
+        <p class="note">For privacy, coordinates may be jittered or generalized.</p>
+      </div>
+      -->
+    </section>
+
+    <section id="gallery">
+      <h2>Image gallery</h2>
+      <div class="gallery" aria-live="polite">
+        <!-- Replace sample thumbnails with a few representative images from your dataset -->
+        <img src="images/1.JPG" alt="Wild boar">
+        <img src="images/3.JPG" alt="Hare at night">
+        <img src="images/2.JPG" alt="Deer looking back">
+        <img src="images/4.JPG" alt="Wolf pack drinking at night"> 
+      </div>
+      <div class="gallery" aria-live="polite">
+       <img src="images/7.JPG" alt="Sounder of wild boars at night">
+         
+        <img src="images/5.JPG" alt="Two deers on approaching trail">
+         
+           <img src="images/8.JPG" alt="Prickle of porcupines">
+         <img src="images/6.JPG" alt="Fox staring at the camera">
+         
+      </div>
+
+      <dialog id="lightbox" aria-label="Image preview">
+        <div class="modal-header">
+          <span id="img-alt">Preview</span>
+          <button class="close" aria-label="Close" onclick="document.getElementById('lightbox').close()">×</button>
+        </div>
+        <div class="modal-body"><img id="img-full" alt="" style="width:100%;height:auto;border-radius:12px"></div>
+      </dialog>
+    </section>
+
+    <section id="license" class="two-col">
+      <div>
+        <h2>License & usage</h2>
+        <p>Content is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> unless otherwise noted. Please credit the dataset as indicated in the citation.</p>
+        <ul>
+          <li>✅ Academic & commercial use permitted with attribution</li>
+          <li>🚫 Do not attempt to locate endangered species from the data</li>
+          <li>🔒 Human subjects filtered; report any accidental exposure</li>
+        </ul>
+      </div>
+      <div>
+        <h2>How to cite</h2>
+        <p id="cite">Niccoli, N., Seidenari, L., Greco, I., Salvatori, M., Rovero, F. (2025). <em>ItalianParks400k</em>. https://miccunifi.github.io/ItalianParks400k/</p>
+        <details>
+          <summary class="btn" style="margin-top:8px">BibTeX</summary>
+<pre class="code">@dataset{lastnameYEAR,
+  author       = {Niccoli, N., Seidenari, L., Greco, I., Salvatori, M., Rovero, F. },
+  title        = {ItalianParks400k},
+  year         = {2025},
+  publisher    = {University of Florence},
+  version      = {1.0},
+  url          = {https://miccunifi.github.io/ItalianParks400k/},
+}</pre>
+        </details>
+      </div>
+    </section>
+<!--
+    <section id="faq">
+      <h2>FAQ</h2>
+      <details>
+        <summary>How do I enable Git LFS for large files?</summary>
+        <pre class="code"># one-time setup
+brew install git-lfs   # or download from git-lfs.com
+
+git lfs install
+
+git lfs track "images/**.jpg"
+
+git add .gitattributes
+</pre>
+      </details>
+      <details>
+        <summary>How do I train a detector on these annotations?</summary>
+        <pre class="code">pip install ultralytics
+
+from ultralytics import YOLO
+model = YOLO('yolov8n.pt')
+model.train(data='coco.yaml', imgsz=1280, epochs=50)
+# map paths in coco.yaml to this dataset's images & annotations
+</pre>
+      </details>
+      <details>
+        <summary>How do I build this site on GitHub Pages?</summary>
+        <ol>
+          <li>Create repo <span class="code">REPO</span> in your account.</li>
+          <li>Place this file at <span class="code">/docs/index.html</span> (or at root).</li>
+          <li>On GitHub: <strong>Settings → Pages</strong> → Build from <em>Deploy from a branch</em>, pick <em>main</em>, folder <em>/docs</em>.</li>
+          <li>Visit <span class="code">https://YOUR-USERNAME.github.io/REPO/</span>.</li>
+        </ol>
+      </details>
+    </section>
+-->
+    <section>
+      <h2>Maintainers</h2>
+      <p><strong>Media Integration and Communication Center</strong> • Contact: <a href="mailto:lorenzo.seidenari@unifi.it">lorenzo.seidenari@unifi.it</a> • Issues & requests via <a href="https://github.com/miccunifi/ItalianParks400k/issues" target="_blank" rel="noopener">GitHub Issues</a></p>
+    </section>
+  </main>
+
+  <!--<footer class="container footer">
+    <div>© <span id="year"></span> YOUR LAB/ORG • Built with GitHub Pages</div>
+  </footer>
+-->
+  <script>
+    // Lightbox for gallery
+    document.querySelectorAll('.gallery img').forEach(img => {
+      img.addEventListener('click', () => {
+        const dlg = document.getElementById('lightbox');
+        document.getElementById('img-full').src = img.dataset.full || img.src;
+        document.getElementById('img-alt').textContent = img.alt || 'Preview';
+        dlg.showModal();
+      })
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      if(id.length > 1){ e.preventDefault(); document.querySelector(id).scrollIntoView({behavior:'smooth'}); }
+    }));
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
